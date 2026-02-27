@@ -1,59 +1,661 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+#  PHP_Laravel12_Phone
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Laravel](https://img.shields.io/badge/Laravel-12.x-red)
+![PHP](https://img.shields.io/badge/PHP-8.2+-blue)
+![MySQL](https://img.shields.io/badge/Database-MySQL-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+##  Overview
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**PHP_Laravel12_Phone** is a Laravel 12 project that demonstrates how to implement Indian phone number validation using the `propaganistas/laravel-phone` package.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The project includes a simple user registration system where phone numbers are:
 
-## Learning Laravel
+* Validated using Google’s libphonenumber library
+* Restricted to Indian numbers
+* Stored in E.164 international format (+91XXXXXXXXXX)
+* Displayed in a clean user listing interface
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+This project is useful for learning real-world phone validation and proper international number formatting in Laravel.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+##  Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+*  Laravel 12 Setup
+*  MySQL Database Integration
+*  User Registration Form
+*  Indian Phone Number Validation
+*  E.164 International Format Storage
+*  Unique Email & Phone Validation
+*  Secure Password Hashing (bcrypt)
+*  Clean Validation Error UI
+*  Latest Users Displayed First
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+##  Folder Structure
 
-## Contributing
+```
+PHP_Laravel12_Phone/
+│
+├── app/
+│   ├── Http/
+│   │   └── Controllers/
+│   │       └── UserController.php
+│   └── Models/
+│       └── User.php
+│
+├── database/
+│   └── migrations/
+│       └── xxxx_create_users_table.php
+│
+├── resources/
+│   └── views/
+│       └── users/
+│           ├── create.blade.php
+│           └── index.blade.php
+│
+├── routes/
+│   └── web.php
+│
+├── .env
+└── composer.json
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+## 1. Introduction
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+This project demonstrates how to:
 
-## Security Vulnerabilities
+* Install Laravel 12
+* Configure database
+* Create a user registration system
+* Validate Indian phone numbers using propaganistas/laravel-phone
+* Store phone numbers in E.164 international format
+* Display formatted phone numbers
+* Implement clean validation UI
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 2. System Requirements
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Ensure your system has:
+
+* PHP 8.2 or higher
+* Composer
+* MySQL
+* XAMPP / Local server
+* Web browser
+
+Check installed versions:
+
+```bash
+php -v
+composer -v
+```
+
+---
+
+## 3. Project Installation
+
+### Step 1: Create Laravel Project
+
+Open terminal and run:
+
+```bash
+composer create-project laravel/laravel PHP_Laravel12_Phone
+```
+
+Start development server:
+
+```bash
+php artisan serve
+```
+
+Visit:
+
+```
+http://127.0.0.1:8000
+```
+
+If Laravel welcome page appears, installation is successful.
+
+---
+
+## 4. Database Configuration
+
+### Step 1: Create Database
+
+Create a database in phpMyAdmin:
+
+```
+phone
+```
+
+### Step 2: Update .env File
+
+Open .env file and update:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=phone
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+---
+
+## 5. Modify Users Migration
+
+Open:
+
+database/migrations/xxxx_create_users_table.php
+
+Update migration:
+
+```php
+public function up(): void
+{
+    Schema::create('users', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('email')->unique();
+        $table->string('phone');
+        $table->timestamp('email_verified_at')->nullable();
+        $table->string('password');
+        $table->rememberToken();
+        $table->timestamps();
+    });
+}
+```
+
+Run migration:
+
+```bash
+php artisan migrate
+```
+
+---
+
+## 6. Install Laravel Phone Package
+
+Install the package:
+
+```bash
+composer require propaganistas/laravel-phone
+```
+
+This package uses Google’s libphonenumber library for real phone validation.
+
+---
+
+## 7. Configure Validation Language
+
+Open:
+
+lang/en/validation.php
+
+Add this line at top-level (same level as required, email, regex):
+
+```php
+'regex' => 'The :attribute field format is invalid.',
+'phone' => 'The :attribute must be a valid phone number.',
+'required' => 'The :attribute field is required.',
+```
+
+Add Inside custom Section:
+
+```php
+'custom' => [
+    'phone' => [
+        'phone' => 'Please enter a valid phone number.',
+    ],
+],
+```
+
+Add Inside attributes Section:
+
+```php
+'attributes' => [
+    'phone' => 'phone number',
+    'email' => 'email address',
+    'name' => 'full name',
+],
+```
+
+Clear cache:
+
+```bash
+php artisan optimize:clear
+```
+
+---
+
+## 8. Update User Model
+
+Open:
+
+app/Models/User.php
+
+Update fillable:
+
+```php
+protected $fillable = [
+    'name',
+    'email',
+    'phone',
+    'password',
+];
+```
+
+---
+
+## 9. Create Controller
+
+Generate controller:
+
+```bash
+php artisan make:controller UserController
+```
+
+Replace file:
+
+app/Http/Controllers/UserController.php
+
+With:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\User;
+use Propaganistas\LaravelPhone\Rules\Phone;
+
+class UserController extends Controller
+{
+    public function index()
+    {
+        $users = User::latest()->get();
+        return view('users.index', compact('users'));
+    }
+
+    public function create()
+    {
+        return view('users.create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'phone'    => ['required', 'unique:users,phone', new Phone('IN')],
+            'password' => 'required|min:6',
+        ], [
+            'phone.phone' => 'Please enter a valid Indian phone number.',
+        ]);
+
+        User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'phone'    => phone($request->phone, 'IN')->formatE164(),
+            'password' => bcrypt($request->password),
+        ]);
+
+        return redirect()->route('users.index')
+                        ->with('success', 'User Created Successfully');
+    }
+}
+```
+
+---
+
+## 10. Define Routes
+
+Open:
+
+routes/web.php
+
+Add:
+
+```php
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+
+Route::get('/', function () {
+    return redirect()->route('users.index');
+});
+
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
+```
+
+---
+
+## 11. Create Views
+
+Create folder:
+
+resources/views/users
+
+Create:
+
+### create.blade.php
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create User</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 30px;
+            width: 350px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #4CAF50;
+        }
+
+        .error-border {
+            border: 1px solid red !important;
+        }
+
+        .field-error {
+            color: red;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background: #4CAF50;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+
+    <h2>Create User</h2>
+
+    <form action="{{ route('users.store') }}" method="POST">
+        @csrf
+
+        {{-- Name --}}
+        <input type="text"
+               name="name"
+               value="{{ old('name') }}"
+               placeholder="Name"
+               class="@error('name') error-border @enderror">
+
+        @error('name')
+            <div class="field-error">{{ $message }}</div>
+        @enderror
+
+
+        {{-- Email --}}
+        <input type="email"
+               name="email"
+               value="{{ old('email') }}"
+               placeholder="Email"
+               class="@error('email') error-border @enderror">
+
+        @error('email')
+            <div class="field-error">{{ $message }}</div>
+        @enderror
+
+
+        {{-- Phone --}}
+        <input type="text"
+               name="phone"
+               value="{{ old('phone') }}"
+               placeholder="Phone (9876543210)"
+               class="@error('phone') error-border @enderror">
+
+        @error('phone')
+            <div class="field-error">{{ $message }}</div>
+        @enderror
+
+
+        {{-- Password --}}
+        <input type="password"
+               name="password"
+               placeholder="Password"
+               class="@error('password') error-border @enderror">
+
+        @error('password')
+            <div class="field-error">{{ $message }}</div>
+        @enderror
+
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <a href="{{ route('users.index') }}" class="back-link">← Back to List</a>
+
+</div>
+
+</body>
+</html>
+
+```
+
+---
+
+### index.blade.php
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User List</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            padding: 40px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: #e6ffed;
+            padding: 10px;
+            border-radius: 6px;
+            color: green;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .create-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 8px 15px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .create-btn:hover {
+            background: #0069d9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        tr:hover {
+            background: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+
+<h2>User List</h2>
+
+@if(session('success'))
+    <div class="success">
+        {{ session('success') }}
+    </div>
+@endif
+
+<a href="{{ route('users.create') }}" class="create-btn">+ Create User</a>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone (E.164)</th>
+        <th>Created At</th>
+    </tr>
+
+    @foreach($users as $user)
+    <tr>
+        <td>{{ $user->id }}</td>
+        <td>{{ $user->name }}</td>
+        <td>{{ $user->email }}</td>
+        <td>{{ $user->phone }}</td>
+        <td>{{ $user->created_at }}</td>
+    </tr>
+    @endforeach
+
+</table>
+
+</body>
+</html>
+
+```
+
+---
+
+## 12. How Phone Validation Works
+
+Validation rule:
+
+```php
+new Phone('IN')
+```
+
+This ensures:
+
+* Valid Indian phone number
+* Real telecom validation
+* Google libphonenumber verification
+
+Storage format:
+
+```php
+formatE164()
+```
+
+Example stored value:
+
+```
++917069688473
+```
+
+This is international standard format.
+
+---
+
+## OUTPUT
+
+### Enter Invalid Number
+
+<img width="491" height="464" alt="Screenshot 2026-02-10 164235" src="https://github.com/user-attachments/assets/90d66d15-c0b1-40d6-b47f-d5c39c416ee8" />
+
+
+### Enter Valid Number
+
+<img width="466" height="412" alt="Screenshot 2026-02-10 164401" src="https://github.com/user-attachments/assets/f95cb4f8-c099-42b7-8ffc-063ccfc5b7c0" />
+
+
+### Valid Number Store
+
+<img width="1884" height="283" alt="Screenshot 2026-02-10 164413" src="https://github.com/user-attachments/assets/136be0eb-204d-4403-8244-5839d383f245" />
+
+
