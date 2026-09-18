@@ -8,42 +8,102 @@ use Propaganistas\LaravelPhone\Rules\Phone;
 
 class UserController extends Controller
 {
-    // Display list of users ordered by latest first
-    public function index()
+    /**
+     * Display the user list with search and filtering.
+     */
+    public function index(Request $request)
     {
-        $users = User::latest()->get(); // Fetch all users sorted by newest
-        return view('users.index', compact('users')); // Return user list view
+        $query = User::query();
+
+        // Search by name, email or phone number
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%')
+                  ->orWhere('phone', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Filter by registration period
+        if ($request->filter === 'today') {
+            $query->whereDate('created_at', today());
+        }
+
+        if ($request->filter === 'month') {
+            $query->whereMonth('created_at', now()->month)
+                  ->whereYear('created_at', now()->year);
+        }
+
+        if ($request->filter === 'recent') {
+            $query->where('created_at', '>=', now()->subDays(7));
+        }
+
+        $users = $query->latest()->get();
+
+        return view('users.index', compact('users'));
     }
 
-    // Show the user creation form
+    /**
+     * Display the phone management dashboard.
+     */
+    public function dashboard()
+    {
+        $totalUsers = User::count();
+
+        $todayUsers = User::whereDate('created_at', today())->count();
+
+        $monthUsers = User::whereMonth('created_at', now()->month)
+                           ->whereYear('created_at', now()->year)
+                           ->count();
+
+        $recentUsers = User::where('created_at', '>=', now()->subDays(7))->count();
+
+        $latestUsers = User::latest()
+                           ->take(5)
+                           ->get();
+
+        return view('users.dashboard', compact(
+            'totalUsers',
+            'todayUsers',
+            'monthUsers',
+            'recentUsers',
+            'latestUsers'
+        ));
+    }
+
+    /**
+     * Show the user creation form.
+     */
     public function create()
     {
-        return view('users.create'); // Load create user form view
+        return view('users.create');
     }
 
-    // Store a newly created user in the database
+    /**
+     * Store a newly created user.
+     */
     public function store(Request $request)
     {
-        // Validate incoming request data
         $request->validate([
-            'name'     => 'required|string|max:255', // Name is required and must be string
-            'email'    => 'required|email|unique:users,email', // Email must be unique
-            'phone'    => ['required', 'unique:users,phone', new Phone('IN')], // Validate Indian phone number
-            'password' => 'required|min:6', // Password minimum length 6
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'phone'    => ['required', 'unique:users,phone', new Phone('IN')],
+            'password' => 'required|min:6',
         ], [
-            'phone.phone' => 'Please enter a valid Indian phone number.', // Custom error message for phone validation
+            'phone.phone' => 'Please enter a valid Indian phone number.',
         ]);
 
-        // Create and store user in database
         User::create([
-            'name'     => $request->name, // Store name
-            'email'    => $request->email, // Store email
-            'phone'    => phone($request->phone, 'IN')->formatE164(), // Store phone in E.164 format (+91XXXXXXXXXX)
-            'password' => bcrypt($request->password), // Encrypt password before saving
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'phone'    => phone($request->phone, 'IN')->formatE164(),
+            'password' => bcrypt($request->password),
         ]);
 
-        // Redirect back to user list with success message
-        return redirect()->route('users.index')
-                        ->with('success', 'User Created Successfully');
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User Created Successfully');
     }
 }
