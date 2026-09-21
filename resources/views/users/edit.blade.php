@@ -4,14 +4,14 @@
 
 <head>
 
-  
+   
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-    <title>Create User</title>
+    <title>Edit User</title>
 
     <style>
         * {
@@ -21,88 +21,90 @@
         body {
             font-family: Arial, sans-serif;
             background: #f4f6f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 30px;
         }
 
         .card {
-            background: #ffffff;
+            background: white;
+            max-width: 500px;
+            margin: 30px auto;
             padding: 30px;
-            width: 400px;
-            max-width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.10);
         }
 
         h2 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         label {
             display: block;
-            font-weight: bold;
             margin-bottom: 6px;
+            font-weight: bold;
         }
 
         input {
             width: 100%;
-            padding: 10px;
+            padding: 11px;
             margin-bottom: 6px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            outline: none;
         }
 
         input:focus {
-            border-color: #4CAF50;
+            border-color: #007bff;
+            outline: none;
         }
 
         .error-border {
-            border: 1px solid red !important;
+            border-color: red !important;
         }
 
         .field-error {
             color: red;
             font-size: 13px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .help {
             color: #777;
             font-size: 12px;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
 
-        button {
+        .update-btn {
             width: 100%;
-            padding: 11px;
-            margin-top: 10px;
-            background: #4CAF50;
+            padding: 12px;
             border: none;
+            background: #007bff;
             color: white;
             border-radius: 6px;
-            cursor: pointer;
             font-weight: bold;
+            cursor: pointer;
         }
 
-        button:hover {
-            background: #45a049;
+        .update-btn:hover {
+            background: #0069d9;
         }
 
         .back-link {
             display: block;
             text-align: center;
-            margin-top: 15px;
-            text-decoration: none;
+            margin-top: 18px;
             color: #333;
+            text-decoration: none;
+        }
+
+        .current-phone {
+            background: #f1f8ff;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 18px;
         }
     </style>
- 
+
 
 </head>
 
@@ -110,16 +112,30 @@
 
     <div class="card">
 
+       
         <h2>
-            📱 Create User
+            ✏️ Edit User
         </h2>
 
 
+        <div class="current-phone">
+
+            Current Phone:
+
+            <strong>
+                {{ $user->phone }}
+            </strong>
+
+        </div>
+
+
         <form
-            action="{{ route('users.store') }}"
+            action="{{ route('users.update', $user) }}"
             method="POST">
 
             @csrf
+
+            @method('PUT')
 
 
             <label>
@@ -129,9 +145,9 @@
             <input
                 type="text"
                 name="name"
-                value="{{ old('name') }}"
-                placeholder="Name"
-                class="@error('name') error-border @enderror">
+                value="{{ old('name', $user->name) }}"
+                class="@error('name') error-border @enderror"
+                placeholder="Enter name">
 
             @error('name')
 
@@ -149,9 +165,9 @@
             <input
                 type="email"
                 name="email"
-                value="{{ old('email') }}"
-                placeholder="Email"
-                class="@error('email') error-border @enderror">
+                value="{{ old('email', $user->email) }}"
+                class="@error('email') error-border @enderror"
+                placeholder="Enter email">
 
             @error('email')
 
@@ -169,12 +185,12 @@
             <input
                 type="text"
                 name="phone"
-                value="{{ old('phone') }}"
-                placeholder="9876543210"
-                class="@error('phone') error-border @enderror">
+                value="{{ old('phone', $user->phone) }}"
+                class="@error('phone') error-border @enderror"
+                placeholder="9876543210">
 
             <div class="help">
-                Enter a valid Indian mobile number.
+                Enter an Indian phone number.
             </div>
 
             @error('phone')
@@ -187,14 +203,14 @@
 
 
             <label>
-                Password
+                New Password
             </label>
 
             <input
                 type="password"
                 name="password"
-                placeholder="Password"
-                class="@error('password') error-border @enderror">
+                class="@error('password') error-border @enderror"
+                placeholder="Leave blank to keep current password">
 
             @error('password')
 
@@ -205,9 +221,11 @@
             @enderror
 
 
-            <button type="submit">
+            <button
+                type="submit"
+                class="update-btn">
 
-                + Create User
+                💾 Update User
 
             </button>
 
@@ -218,10 +236,10 @@
             href="{{ route('users.index') }}"
             class="back-link">
 
-            ← Back to List
+            ← Back to Users
 
         </a>
-   
+        
 
     </div>
 
