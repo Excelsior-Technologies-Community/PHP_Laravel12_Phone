@@ -1,6 +1,16 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
+
 <head>
+
+  
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
     <title>User List - Phone Management</title>
 
     <style>
@@ -16,7 +26,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: auto;
         }
 
@@ -42,22 +52,24 @@
             text-decoration: none;
             color: white;
             font-weight: bold;
+            border: none;
+            cursor: pointer;
         }
 
         .dashboard-btn {
             background: #6f42c1;
         }
 
-        .dashboard-btn:hover {
-            background: #59359a;
-        }
-
         .create-btn {
             background: #007bff;
         }
 
-        .create-btn:hover {
-            background: #0069d9;
+        .export-btn {
+            background: #198754;
+        }
+
+        .bulk-delete-btn {
+            background: #dc3545;
         }
 
         .success {
@@ -70,11 +82,20 @@
             border: 1px solid #b7ebc6;
         }
 
+        .error-box {
+            background: #ffe6e6;
+            color: #b00020;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #ffb3b3;
+        }
+
         .search-card {
             background: white;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             margin-bottom: 25px;
         }
 
@@ -84,20 +105,26 @@
             flex-wrap: wrap;
         }
 
-        .search-input {
-            flex: 1;
-            min-width: 250px;
+        .search-input,
+        .filter-select,
+        .date-input {
             padding: 11px;
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 14px;
         }
 
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+        }
+
         .filter-select {
-            padding: 11px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
             min-width: 180px;
+        }
+
+        .date-input {
+            min-width: 160px;
         }
 
         .search-btn {
@@ -119,6 +146,14 @@
             font-weight: bold;
         }
 
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            align-items: center;
+        }
+
         .result-info {
             margin-top: 15px;
             color: #555;
@@ -129,7 +164,7 @@
             width: 100%;
             border-collapse: collapse;
             background: white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             border-radius: 10px;
             overflow: hidden;
         }
@@ -176,62 +211,51 @@
             margin-top: 5px;
         }
 
-        /* Phone Quick Actions */
-
         .action-buttons {
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
         }
 
         .action-btn {
             display: inline-block;
-            padding: 8px 12px;
+            padding: 7px 10px;
             border-radius: 6px;
             text-decoration: none;
             color: white;
             font-size: 12px;
             font-weight: bold;
-            transition: 0.2s;
             border: none;
             cursor: pointer;
+        }
+
+        .view-btn {
+            background: #6f42c1;
+        }
+
+        .edit-btn {
+            background: #fd7e14;
+        }
+
+        .delete-btn {
+            background: #dc3545;
         }
 
         .call-btn {
             background: #28a745;
         }
 
-        .call-btn:hover {
-            background: #218838;
-        }
-
         .whatsapp-btn {
             background: #25D366;
         }
-
-        .whatsapp-btn:hover {
-            background: #1da851;
-        }
-
-        /* Copy Phone */
 
         .copy-btn {
             background: #6c757d;
         }
 
-        .copy-btn:hover {
-            background: #5a6268;
-        }
-
-        /* Share Phone */
-
         .share-btn {
             background: #17a2b8;
-        }
-
-        .share-btn:hover {
-            background: #138496;
         }
 
         .copy-message {
@@ -250,6 +274,67 @@
             color: #777;
         }
 
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .bulk-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .sort-link {
+            color: white;
+            text-decoration: none;
+        }
+
+        .pagination-wrapper {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 6px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pagination li {
+            display: inline-block;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: block;
+            min-width: 38px;
+            text-align: center;
+            padding: 9px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            background: white;
+            color: #333;
+        }
+
+        .pagination .active span {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .pagination .disabled span {
+            color: #aaa;
+            background: #f5f5f5;
+        }
+
         @media (max-width: 900px) {
 
             body {
@@ -266,129 +351,320 @@
             }
 
             .action-btn {
-                padding: 7px 9px;
+                padding: 6px 8px;
                 font-size: 11px;
             }
 
         }
     </style>
+
+
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <h2>📱 Phone User Management</h2>
+     
+        <h2>📱 Phone User Management</h2>
 
-    @if(session('success'))
+
+        {{-- Success Message --}}
+
+        @if(session('success'))
 
         <div class="success">
+
             {{ session('success') }}
+
         </div>
 
-    @endif
+        @endif
 
 
-    <div class="top-bar">
+        {{-- Validation Errors --}}
 
-        <a href="{{ route('users.dashboard') }}"
-           class="button dashboard-btn">
-            📊 Dashboard
-        </a>
+        @if($errors->any())
 
-        <a href="{{ route('users.create') }}"
-           class="button create-btn">
-            + Create User
-        </a>
+        <div class="error-box">
 
-    </div>
+            <strong>Please fix the following:</strong>
+
+            <ul>
+
+                @foreach($errors->all() as $error)
+
+                <li>{{ $error }}</li>
+
+                @endforeach
+
+            </ul>
+
+        </div>
+
+        @endif
 
 
-    {{-- Search and Filter --}}
+        {{-- Top Buttons --}}
 
-    <div class="search-card">
+        <div class="top-bar">
 
-        <form action="{{ route('users.index') }}"
-              method="GET"
-              class="search-form">
+            <div>
 
-            <input
-                type="text"
-                name="search"
-                value="{{ request('search') }}"
-                class="search-input"
-                placeholder="Search name, email or phone number..."
-            >
+                <a
+                    href="{{ route('users.dashboard') }}"
+                    class="button dashboard-btn">
 
-            <select name="filter" class="filter-select">
+                    📊 Dashboard
 
-                <option value="">
-                    All Users
-                </option>
+                </a>
 
-                <option value="today"
-                    {{ request('filter') === 'today' ? 'selected' : '' }}>
-                    Registered Today
-                </option>
+                <a
+                    href="{{ route('users.create') }}"
+                    class="button create-btn">
 
-                <option value="recent"
-                    {{ request('filter') === 'recent' ? 'selected' : '' }}>
-                    Last 7 Days
-                </option>
+                    + Create User
 
-                <option value="month"
-                    {{ request('filter') === 'month' ? 'selected' : '' }}>
-                    This Month
-                </option>
+                </a>
 
-            </select>
+            </div>
 
-            <button type="submit" class="search-btn">
-                🔎 Search
-            </button>
 
-            <a href="{{ route('users.index') }}"
-               class="reset-btn">
-                Reset
+            <a
+                href="{{ route('users.export', request()->query()) }}"
+                class="button export-btn">
+
+                📥 Export CSV
+
             </a>
 
-        </form>
+        </div>
 
 
-        <div class="result-info">
+        {{-- Search / Filters --}}
 
-            Showing
-            <strong>{{ $users->count() }}</strong>
-            user(s)
+        <div class="search-card">
+
+            <form
+                action="{{ route('users.index') }}"
+                method="GET">
+
+
+                <div class="search-form">
+
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ request('search') }}"
+                        class="search-input"
+                        placeholder="Search name, email or phone number...">
+
+
+                    <select
+                        name="filter"
+                        class="filter-select">
+
+                        <option value="">
+                            All Users
+                        </option>
+
+                        <option
+                            value="today"
+                            {{ request('filter') === 'today' ? 'selected' : '' }}>
+
+                            Registered Today
+
+                        </option>
+
+                        <option
+                            value="recent"
+                            {{ request('filter') === 'recent' ? 'selected' : '' }}>
+
+                            Last 7 Days
+
+                        </option>
+
+                        <option
+                            value="month"
+                            {{ request('filter') === 'month' ? 'selected' : '' }}>
+
+                            This Month
+
+                        </option>
+
+                    </select>
+
+
+                    <button
+                        type="submit"
+                        class="search-btn">
+
+                        🔎 Search
+
+                    </button>
+
+
+                    <a
+                        href="{{ route('users.index') }}"
+                        class="reset-btn">
+
+                        Reset
+
+                    </a>
+
+                </div>
+
+
+                {{-- Date Range --}}
+
+                <div class="filter-row">
+
+                    <strong>
+                        Date Range:
+                    </strong>
+
+                    <input
+                        type="date"
+                        name="start_date"
+                        value="{{ request('start_date') }}"
+                        class="date-input">
+
+
+                    <span>
+                        to
+                    </span>
+
+
+                    <input
+                        type="date"
+                        name="end_date"
+                        value="{{ request('end_date') }}"
+                        class="date-input">
+
+                </div>
+
+            </form>
+
+
+            <div class="result-info">
+
+                Showing
+
+                <strong>
+                    {{ $users->firstItem() ?? 0 }}
+                </strong>
+
+                to
+
+                <strong>
+                    {{ $users->lastItem() ?? 0 }}
+                </strong>
+
+                of
+
+                <strong>
+                    {{ $users->total() }}
+                </strong>
+
+                user(s)
+
+            </div>
 
         </div>
 
-    </div>
+
+        {{-- Bulk Delete Form --}}
+
+        <form
+            id="bulkDeleteForm"
+            action="{{ route('users.bulk-delete') }}"
+            method="POST">
+
+            @csrf
+
+            @method('DELETE')
 
 
-    @if($users->count() > 0)
+            <div class="bulk-bar">
 
-        <table>
+                <button
+                    type="submit"
+                    class="button bulk-delete-btn"
+                    onclick="return confirmBulkDelete()">
 
-            <thead>
+                    🗑️ Delete Selected
 
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone Details</th>
-                    <th>Created At</th>
-                    <th>Quick Actions</th>
-                </tr>
+                </button>
 
-            </thead>
+                <span id="selectedCount">
+                    0 selected
+                </span>
+
+            </div>
 
 
-            <tbody>
+            @if($users->count() > 0)
 
-                @foreach($users as $user)
+            <table>
+
+                <thead>
 
                     <tr>
+
+                        <th>
+
+                            <input
+                                type="checkbox"
+                                id="selectAll"
+                                class="checkbox">
+
+                        </th>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Name
+                        </th>
+
+                        <th>
+                            Email
+                        </th>
+
+                        <th>
+                            Phone Details
+                        </th>
+
+                        <th>
+                            Created At
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @foreach($users as $user)
+
+                    <tr>
+
+                        <td>
+
+                            <input
+                                type="checkbox"
+                                name="user_ids[]"
+                                value="{{ $user->id }}"
+                                class="user-checkbox checkbox">
+
+                        </td>
+
 
                         <td>
                             {{ $user->id }}
@@ -396,9 +672,11 @@
 
 
                         <td>
+
                             <strong>
                                 {{ $user->name }}
                             </strong>
+
                         </td>
 
 
@@ -407,14 +685,11 @@
                         </td>
 
 
-                        {{-- Phone Details --}}
-
                         <td>
 
                             <div class="phone-main">
                                 {{ $user->phone }}
                             </div>
-
 
                             <div class="phone-detail">
 
@@ -424,7 +699,6 @@
 
                             </div>
 
-
                             <div class="phone-detail">
 
                                 National:
@@ -433,13 +707,9 @@
 
                             </div>
 
-
                             <span class="badge">
                                 🇮🇳 India
                             </span>
-
-
-                            {{-- Copy Message --}}
 
                             <div class="copy-message">
                                 ✓ Phone number copied!
@@ -455,21 +725,63 @@
                         </td>
 
 
-                        {{-- Phone Quick Actions --}}
-
                         <td>
 
                             <div class="action-buttons">
+
+                                {{-- View --}}
+
+                                <a
+                                    href="{{ route('users.show', $user) }}"
+                                    class="action-btn view-btn">
+
+                                    👁️ View
+
+                                </a>
+
+
+                                {{-- Edit --}}
+
+                                <a
+                                    href="{{ route('users.edit', $user) }}"
+                                    class="action-btn edit-btn">
+
+                                    ✏️ Edit
+
+                                </a>
+
+
+                                {{-- Delete --}}
+
+                                <form
+                                    action="{{ route('users.destroy', $user) }}"
+                                    method="POST"
+                                    style="display:inline;">
+
+                                    @csrf
+
+                                    @method('DELETE')
+
+                                    <button
+                                        type="submit"
+                                        class="action-btn delete-btn"
+                                        onclick="return confirm('Are you sure you want to delete {{ addslashes($user->name) }}?')">
+
+                                        🗑️ Delete
+
+                                    </button>
+
+                                </form>
 
 
                                 {{-- Call --}}
 
                                 <a
                                     href="tel:{{ $user->phone }}"
-                                    class="action-btn call-btn"
-                                    title="Call {{ $user->name }}"
-                                >
+                                    class="action-btn call-btn">
+
                                     📞 Call
+
                                 </a>
 
 
@@ -479,36 +791,35 @@
                                     href="https://wa.me/{{ ltrim($user->phone, '+') }}"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="action-btn whatsapp-btn"
-                                    title="Message {{ $user->name }} on WhatsApp"
-                                >
+                                    class="action-btn whatsapp-btn">
+
                                     💬 WhatsApp
+
                                 </a>
 
 
-                                {{-- Copy Phone Number --}}
+                                {{-- Copy --}}
 
                                 <button
                                     type="button"
                                     class="action-btn copy-btn"
-                                    onclick="copyPhone('{{ $user->phone }}', this)"
-                                    title="Copy phone number"
-                                >
+                                    onclick="copyPhone('{{ $user->phone }}', this)">
+
                                     📋 Copy
+
                                 </button>
 
 
-                                {{-- Share Phone Number --}}
+                                {{-- Share --}}
 
                                 <button
                                     type="button"
                                     class="action-btn share-btn"
-                                    onclick="sharePhone('{{ $user->name }}', '{{ $user->phone }}')"
-                                    title="Share phone number"
-                                >
-                                    📤 Share
-                                </button>
+                                    onclick="sharePhone('{{ addslashes($user->name) }}', '{{ $user->phone }}')">
 
+                                    📤 Share
+
+                                </button>
 
                             </div>
 
@@ -516,150 +827,336 @@
 
                     </tr>
 
-                @endforeach
+                    @endforeach
 
-            </tbody>
+                </tbody>
 
-        </table>
-
-
-    @else
-
-        <div class="empty">
-
-            <h3>
-                No users found
-            </h3>
-
-            <p>
-                No users match your current search or filter.
-            </p>
-
-        </div>
-
-    @endif
-
-</div>
+            </table>
 
 
-{{-- Phone Copy & Share JavaScript --}}
+            {{-- Number Only Pagination --}}
 
-<script>
+            <div class="pagination-wrapper">
 
-    /*
-     * Copy Phone Number
-     */
-    function copyPhone(phone, button) {
+                @if($users->hasPages())
 
-        if (navigator.clipboard) {
+                <ul class="pagination">
 
-            navigator.clipboard.writeText(phone)
-                .then(function () {
+                    {{-- Previous number only --}}
 
-                    showCopyMessage(button);
+                    @if($users->onFirstPage())
 
-                })
-                .catch(function () {
+                    <li class="disabled">
+                        <span>‹</span>
+                    </li>
 
-                    fallbackCopy(phone, button);
+                    @else
 
-                });
+                    <li>
 
-        } else {
+                        <a href="{{ $users->previousPageUrl() }}">
+                            ‹
+                        </a>
 
-            fallbackCopy(phone, button);
+                    </li>
 
-        }
-
-    }
+                    @endif
 
 
-    /*
-     * Fallback Copy Method
-     */
-    function fallbackCopy(phone, button) {
+                    @foreach($users->getUrlRange(
+                    max(1, $users->currentPage() - 2),
+                    min($users->lastPage(), $users->currentPage() + 2)
+                    ) as $page => $url)
 
-        const textArea = document.createElement('textarea');
+                    @if($page == $users->currentPage())
 
-        textArea.value = phone;
+                    <li class="active">
+                        <span>
+                            {{ $page }}
+                        </span>
+                    </li>
 
-        textArea.style.position = 'fixed';
-        textArea.style.left = '-999999px';
+                    @else
 
-        document.body.appendChild(textArea);
+                    <li>
 
-        textArea.focus();
-        textArea.select();
+                        <a href="{{ $url }}">
+                            {{ $page }}
+                        </a>
 
-        try {
+                    </li>
 
-            document.execCommand('copy');
+                    @endif
 
-            showCopyMessage(button);
-
-        } catch (error) {
-
-            alert('Unable to copy the phone number.');
-
-        }
-
-        document.body.removeChild(textArea);
-
-    }
+                    @endforeach
 
 
-    /*
-     * Show Copy Confirmation
-     */
-    function showCopyMessage(button) {
+                    {{-- Next --}}
 
-        const row = button.closest('tr');
+                    @if($users->hasMorePages())
 
-        const message = row.querySelector('.copy-message');
+                    <li>
 
-        message.style.display = 'block';
+                        <a href="{{ $users->nextPageUrl() }}">
+                            ›
+                        </a>
 
-        setTimeout(function () {
+                    </li>
 
-            message.style.display = 'none';
+                    @else
 
-        }, 2000);
+                    <li class="disabled">
+                        <span>›</span>
+                    </li>
 
-    }
+                    @endif
+
+                </ul>
+
+                @endif
+
+            </div>
 
 
-    /*
-     * Share Phone Number
-     */
-    function sharePhone(name, phone) {
+            @else
 
-        if (navigator.share) {
+            <div class="empty">
 
-            navigator.share({
+                <h3>
+                    No users found
+                </h3>
 
-                title: 'Phone Number',
+                <p>
+                    No users match your current search or filter.
+                </p>
 
-                text: name + ' - ' + phone
+            </div>
 
-            }).catch(function (error) {
+            @endif
 
-                console.log('Share cancelled:', error);
+        </form>
+       
 
-            });
+    </div>
 
-        } else {
+    <script>
+        /*
+    |--------------------------------------------------------------------------
+    | Select All
+    |--------------------------------------------------------------------------
+    */
 
-            alert(
-                'Phone sharing is not supported by this browser. ' +
-                'Please use the Copy button instead.'
+        const selectAll =
+            document.getElementById('selectAll');
+
+        const userCheckboxes =
+            document.querySelectorAll('.user-checkbox');
+
+        const selectedCount =
+            document.getElementById('selectedCount');
+
+
+        if (selectAll) {
+
+            selectAll.addEventListener(
+                'change',
+                function() {
+
+                    userCheckboxes.forEach(
+                        function(checkbox) {
+
+                            checkbox.checked =
+                                selectAll.checked;
+
+                        }
+                    );
+
+                    updateSelectedCount();
+
+                }
             );
 
         }
 
-    }
 
-</script>
+        userCheckboxes.forEach(
+            function(checkbox) {
 
+                checkbox.addEventListener(
+                    'change',
+                    updateSelectedCount
+                );
+
+            }
+        );
+
+
+        function updateSelectedCount() {
+            const checked =
+                document.querySelectorAll(
+                    '.user-checkbox:checked'
+                ).length;
+
+            selectedCount.textContent =
+                checked + ' selected';
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Bulk Delete Confirmation
+        |--------------------------------------------------------------------------
+        */
+
+        function confirmBulkDelete() {
+            const checked =
+                document.querySelectorAll(
+                    '.user-checkbox:checked'
+                ).length;
+
+            if (checked === 0) {
+
+                alert(
+                    'Please select at least one user.'
+                );
+
+                return false;
+            }
+
+            return confirm(
+                'Are you sure you want to delete ' +
+                checked +
+                ' selected user(s)?'
+            );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Copy Phone
+        |--------------------------------------------------------------------------
+        */
+
+        function copyPhone(phone, button) {
+            if (navigator.clipboard) {
+
+                navigator.clipboard.writeText(phone)
+                    .then(function() {
+
+                        showCopyMessage(button);
+
+                    })
+                    .catch(function() {
+
+                        fallbackCopy(
+                            phone,
+                            button
+                        );
+
+                    });
+
+            } else {
+
+                fallbackCopy(
+                    phone,
+                    button
+                );
+
+            }
+        }
+
+
+        function fallbackCopy(phone, button) {
+            const textArea =
+                document.createElement('textarea');
+
+            textArea.value = phone;
+
+            textArea.style.position = 'fixed';
+
+            textArea.style.left = '-999999px';
+
+            document.body.appendChild(textArea);
+
+            textArea.focus();
+
+            textArea.select();
+
+            try {
+
+                document.execCommand('copy');
+
+                showCopyMessage(button);
+
+            } catch (error) {
+
+                alert(
+                    'Unable to copy phone number.'
+                );
+
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+
+        function showCopyMessage(button) {
+            const row =
+                button.closest('tr');
+
+            const message =
+                row.querySelector(
+                    '.copy-message'
+                );
+
+            message.style.display =
+                'block';
+
+            setTimeout(function() {
+
+                message.style.display =
+                    'none';
+
+            }, 2000);
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Share Phone
+        |--------------------------------------------------------------------------
+        */
+
+        function sharePhone(name, phone) {
+            if (navigator.share) {
+
+                navigator.share({
+
+                    title: 'Phone Number',
+
+                    text: name +
+                        ' - ' +
+                        phone
+
+                }).catch(function() {
+
+                    console.log(
+                        'Share cancelled'
+                    );
+
+                });
+
+            } else {
+
+                alert(
+                    'Phone sharing is not supported by this browser. ' +
+                    'Please use Copy instead.'
+                );
+
+            }
+        }
+    </script>
 
 </body>
+
 </html>
