@@ -3,22 +3,137 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
+
+/*
+|--------------------------------------------------------------------------
+| Home
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/', function () {
-    return redirect()->route('users.dashboard');
+
+    return redirect()->route(
+        'users.dashboard'
+    );
+
 });
 
-// Phone Management Dashboard
-Route::get('/dashboard', [UserController::class, 'dashboard'])
-    ->name('users.dashboard');
 
-// User List with Search & Filtering
-Route::get('/users', [UserController::class, 'index'])
-    ->name('users.index');
+/*
+|--------------------------------------------------------------------------
+| Dashboard
+|--------------------------------------------------------------------------
+*/
 
-// Create User
-Route::get('/users/create', [UserController::class, 'create'])
-    ->name('users.create');
+Route::get(
+    '/dashboard',
+    [UserController::class, 'dashboard']
+)->name('users.dashboard');
 
-// Store User
-Route::post('/users', [UserController::class, 'store'])
-    ->name('users.store');
+
+/*
+|--------------------------------------------------------------------------
+| User List
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/users',
+    [UserController::class, 'index']
+)->name('users.index');
+
+
+/*
+|--------------------------------------------------------------------------
+| Export Users
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/users/export',
+    [UserController::class, 'export']
+)->name('users.export');
+
+
+/*
+|--------------------------------------------------------------------------
+| Create User
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/users/create',
+    [UserController::class, 'create']
+)->name('users.create');
+
+
+/*
+|--------------------------------------------------------------------------
+| Store User
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/users',
+    [UserController::class, 'store']
+)->name('users.store');
+
+
+/*
+|--------------------------------------------------------------------------
+| Bulk Delete
+|--------------------------------------------------------------------------
+*/
+
+Route::delete(
+    '/users/bulk-delete',
+    [UserController::class, 'bulkDelete']
+)->name('users.bulk-delete');
+
+
+/*
+|--------------------------------------------------------------------------
+| User Details
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/users/{user}',
+    [UserController::class, 'show']
+)->name('users.show');
+
+
+/*
+|--------------------------------------------------------------------------
+| Edit User
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/users/{user}/edit',
+    [UserController::class, 'edit']
+)->name('users.edit');
+
+
+/*
+|--------------------------------------------------------------------------
+| Update User
+|--------------------------------------------------------------------------
+*/
+
+Route::put(
+    '/users/{user}',
+    [UserController::class, 'update']
+)->name('users.update');
+
+
+/*
+|--------------------------------------------------------------------------
+| Delete User
+|--------------------------------------------------------------------------
+*/
+
+Route::delete(
+    '/users/{user}',
+    [UserController::class, 'destroy']
+)->name('users.destroy');
