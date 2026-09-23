@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Phone Management Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         * {
@@ -313,6 +314,45 @@
 
     </div>
 
+    {{-- Country-wise Phone Distribution Analytics --}}
+    <div class="info-card">
+        <h2>📊 Country-wise Phone Distribution Analytics</h2>
+        <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 280px; max-width: 380px; margin: auto;">
+                <canvas id="countryChart"></canvas>
+            </div>
+            <div style="flex: 1; min-width: 280px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Country</th>
+                            <th>Users Count</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($countryAnalytics as $item)
+                            <tr>
+                                <td style="text-align: left; font-weight: bold;">
+                                    {{ $item['flag'] }} {{ $item['country'] }} ({{ $item['code'] }})
+                                </td>
+                                <td>{{ $item['count'] }}</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="flex: 1; background: #eee; border-radius: 4px; height: 10px; overflow: hidden;">
+                                            <div style="width: {{ $item['percentage'] }}%; background: #007bff; height: 100%;"></div>
+                                        </div>
+                                        <span>{{ $item['percentage'] }}%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     {{-- Latest Users --}}
     <div class="info-card">
 
@@ -358,8 +398,30 @@
                                     {{ $user->phone }}
                                 </div>
 
+                                @php
+                                    $cCode = 'IN';
+                                    try {
+                                        $cCode = phone($user->phone)->getCountry() ?? 'IN';
+                                    } catch (\Throwable $e) {
+                                        $cCode = 'IN';
+                                    }
+                                    $flagMap = [
+                                        'IN' => '🇮🇳 India',
+                                        'US' => '🇺🇸 USA',
+                                        'GB' => '🇬🇧 UK',
+                                        'AE' => '🇦🇪 UAE',
+                                        'CA' => '🇨🇦 Canada',
+                                        'AU' => '🇦🇺 Australia',
+                                        'DE' => '🇩🇪 Germany',
+                                        'FR' => '🇫🇷 France',
+                                        'JP' => '🇯🇵 Japan',
+                                        'SG' => '🇸🇬 Singapore',
+                                    ];
+                                    $cBadge = $flagMap[$cCode] ?? '🌐 Global';
+                                @endphp
+
                                 <span class="badge">
-                                    🇮🇳 India
+                                    {{ $cBadge }}
                                 </span>
 
                             </td>
@@ -387,6 +449,37 @@
     </div>
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const analytics = @json($countryAnalytics);
+        const labels = analytics.map(a => a.flag + ' ' + a.country);
+        const data = analytics.map(a => a.count);
+        const colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#17a2b8', '#fd7e14', '#e83e8c', '#20c997', '#6c757d'];
+
+        const ctx = document.getElementById('countryChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors.slice(0, labels.length)
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
 
 </body>
 </html>

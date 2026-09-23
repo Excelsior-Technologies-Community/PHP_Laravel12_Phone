@@ -197,9 +197,51 @@ class UserController extends Controller
             now()->subDays(7)
         )->count();
 
-        $oldestUsers = User::oldest()
+        $latestUsers = User::latest()
             ->take(5)
             ->get();
+
+        $users = User::all();
+        $countryCounts = [];
+        $flagMap = [
+            'IN' => ['flag' => '🇮🇳', 'name' => 'India'],
+            'US' => ['flag' => '🇺🇸', 'name' => 'United States'],
+            'GB' => ['flag' => '🇬🇧', 'name' => 'United Kingdom'],
+            'AE' => ['flag' => '🇦🇪', 'name' => 'UAE'],
+            'CA' => ['flag' => '🇨🇦', 'name' => 'Canada'],
+            'AU' => ['flag' => '🇦🇺', 'name' => 'Australia'],
+            'DE' => ['flag' => '🇩🇪', 'name' => 'Germany'],
+            'FR' => ['flag' => '🇫🇷', 'name' => 'France'],
+            'JP' => ['flag' => '🇯🇵', 'name' => 'Japan'],
+            'SG' => ['flag' => '🇸🇬', 'name' => 'Singapore'],
+        ];
+
+        foreach ($users as $u) {
+            $code = 'OTHER';
+            try {
+                $detected = phone($u->phone)->getCountry();
+                if ($detected && isset($flagMap[$detected])) {
+                    $code = $detected;
+                }
+            } catch (\Throwable $e) {
+                $code = 'OTHER';
+            }
+            $countryCounts[$code] = ($countryCounts[$code] ?? 0) + 1;
+        }
+
+        $countryAnalytics = [];
+        $totalCount = count($users);
+        foreach ($countryCounts as $code => $count) {
+            $info = $flagMap[$code] ?? ['flag' => '🌐', 'name' => 'Other / Global'];
+            $percentage = $totalCount > 0 ? round(($count / $totalCount) * 100, 1) : 0;
+            $countryAnalytics[] = [
+                'code' => $code,
+                'country' => $info['name'],
+                'flag' => $info['flag'],
+                'count' => $count,
+                'percentage' => $percentage,
+            ];
+        }
 
         return view(
             'users.dashboard',
@@ -208,7 +250,8 @@ class UserController extends Controller
                 'todayUsers',
                 'monthUsers',
                 'recentUsers',
-                'oldestUsers'
+                'latestUsers',
+                'countryAnalytics'
             )
         );
     }
@@ -230,6 +273,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $countryCode = strtoupper($request->input('country_code', 'IN'));
+        $supported = ['IN', 'US', 'GB', 'AE', 'CA', 'AU', 'DE', 'FR', 'JP', 'SG'];
+        if (!in_array($countryCode, $supported)) {
+            $countryCode = 'IN';
+        }
+
         $request->validate(
             [
                 'name' => [
@@ -245,10 +294,16 @@ class UserController extends Controller
                     'unique:users,email',
                 ],
 
+                'country_code' => [
+                    'nullable',
+                    'string',
+                    'in:' . implode(',', $supported),
+                ],
+
                 'phone' => [
                     'required',
                     'unique:users,phone',
-                    new Phone('IN'),
+                    (new Phone)->country([$countryCode, 'AUTO']),
                 ],
 
                 'password' => [
@@ -259,7 +314,7 @@ class UserController extends Controller
             ],
             [
                 'phone.phone' =>
-                    'Please enter a valid Indian phone number.',
+                    "Please enter a valid phone number for the selected country ({$countryCode}).",
             ]
         );
 
@@ -270,7 +325,7 @@ class UserController extends Controller
 
             'phone' => phone(
                 $request->phone,
-                'IN'
+                $countryCode
             )->formatE164(),
 
             'password' => bcrypt(
@@ -318,6 +373,12 @@ class UserController extends Controller
         Request $request,
         User $user
     ) {
+        $countryCode = strtoupper($request->input('country_code', 'IN'));
+        $supported = ['IN', 'US', 'GB', 'AE', 'CA', 'AU', 'DE', 'FR', 'JP', 'SG'];
+        if (!in_array($countryCode, $supported)) {
+            $countryCode = 'IN';
+        }
+
         $request->validate(
             [
                 'name' => [
@@ -333,10 +394,16 @@ class UserController extends Controller
                     'unique:users,email,' . $user->id,
                 ],
 
+                'country_code' => [
+                    'nullable',
+                    'string',
+                    'in:' . implode(',', $supported),
+                ],
+
                 'phone' => [
                     'required',
                     'unique:users,phone,' . $user->id,
-                    new Phone('IN'),
+                    (new Phone)->country([$countryCode, 'AUTO']),
                 ],
 
                 'password' => [
@@ -347,7 +414,7 @@ class UserController extends Controller
             ],
             [
                 'phone.phone' =>
-                    'Please enter a valid Indian phone number.',
+                    "Please enter a valid phone number for the selected country ({$countryCode}).",
             ]
         );
 
@@ -357,7 +424,7 @@ class UserController extends Controller
 
         $user->phone = phone(
             $request->phone,
-            'IN'
+            $countryCode
         )->formatE164();
 
         /*
@@ -380,6 +447,22 @@ class UserController extends Controller
             ->with(
                 'success',
                 'User updated successfully!'
+            );
+    }
+
+
+    /**
+     * Send Mock SMS OTP to User.
+     */
+    public function sendOtp(User $user)
+    {
+        $otp = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        return redirect()
+            ->back()
+            ->with(
+                'success',
+                "📲 Mock SMS OTP sent to {$user->name} ({$user->phone}): [ {$otp} ]"
             );
     }
 
