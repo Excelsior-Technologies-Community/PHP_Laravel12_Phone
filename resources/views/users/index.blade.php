@@ -687,6 +687,35 @@
 
                         <td>
 
+                            @php
+                                $cCode = 'IN';
+                                try {
+                                    $cCode = phone($user->phone)->getCountry() ?? 'IN';
+                                } catch (\Throwable $e) {
+                                    $cCode = 'IN';
+                                }
+                                $flagMap = [
+                                    'IN' => '🇮🇳 India',
+                                    'US' => '🇺🇸 USA',
+                                    'GB' => '🇬🇧 UK',
+                                    'AE' => '🇦🇪 UAE',
+                                    'CA' => '🇨🇦 Canada',
+                                    'AU' => '🇦🇺 Australia',
+                                    'DE' => '🇩🇪 Germany',
+                                    'FR' => '🇫🇷 France',
+                                    'JP' => '🇯🇵 Japan',
+                                    'SG' => '🇸🇬 Singapore',
+                                ];
+                                $cBadge = $flagMap[$cCode] ?? '🌐 Global';
+                                try {
+                                    $intl = phone($user->phone)->formatInternational();
+                                    $nat = phone($user->phone)->formatNational();
+                                } catch (\Throwable $e) {
+                                    $intl = $user->phone;
+                                    $nat = $user->phone;
+                                }
+                            @endphp
+
                             <div class="phone-main">
                                 {{ $user->phone }}
                             </div>
@@ -695,7 +724,7 @@
 
                                 International:
 
-                                {{ phone($user->phone, 'IN')->formatInternational() }}
+                                {{ $intl }}
 
                             </div>
 
@@ -703,12 +732,12 @@
 
                                 National:
 
-                                {{ phone($user->phone, 'IN')->formatNational() }}
+                                {{ $nat }}
 
                             </div>
 
                             <span class="badge">
-                                🇮🇳 India
+                                {{ $cBadge }}
                             </span>
 
                             <div class="copy-message">
@@ -796,6 +825,27 @@
                                     💬 WhatsApp
 
                                 </a>
+
+
+                                {{-- Send OTP --}}
+
+                                <form
+                                    action="{{ route('users.send-otp', $user) }}"
+                                    method="POST"
+                                    style="display:inline;">
+
+                                    @csrf
+
+                                    <button
+                                        type="submit"
+                                        class="action-btn"
+                                        style="background: #17a2b8;">
+
+                                        📲 Send OTP
+
+                                    </button>
+
+                                </form>
 
 
                                 {{-- Copy --}}

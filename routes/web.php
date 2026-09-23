@@ -137,3 +137,14 @@ Route::delete(
     '/users/{user}',
     [UserController::class, 'destroy']
 )->name('users.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Send SMS OTP Tester
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/users/{user}/send-otp',
+    [UserController::class, 'sendOtp']
+)->name('users.send-otp');

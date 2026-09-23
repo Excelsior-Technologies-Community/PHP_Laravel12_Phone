@@ -163,18 +163,34 @@
 
 
             <label>
-                Phone
+                Country & Phone Number
             </label>
 
-            <input
-                type="text"
-                name="phone"
-                value="{{ old('phone') }}"
-                placeholder="9876543210"
-                class="@error('phone') error-border @enderror">
+            <div style="display: flex; gap: 10px; margin-bottom: 6px;">
+                <select name="country_code" style="padding: 10px; border: 1px solid #ccc; border-radius: 6px; width: 150px; background: white; font-weight: bold;">
+                    <option value="IN" {{ old('country_code', 'IN') === 'IN' ? 'selected' : '' }}>🇮🇳 +91 (IN)</option>
+                    <option value="US" {{ old('country_code') === 'US' ? 'selected' : '' }}>🇺🇸 +1 (US)</option>
+                    <option value="GB" {{ old('country_code') === 'GB' ? 'selected' : '' }}>🇬🇧 +44 (UK)</option>
+                    <option value="AE" {{ old('country_code') === 'AE' ? 'selected' : '' }}>🇦🇪 +971 (UAE)</option>
+                    <option value="CA" {{ old('country_code') === 'CA' ? 'selected' : '' }}>🇨🇦 +1 (CA)</option>
+                    <option value="AU" {{ old('country_code') === 'AU' ? 'selected' : '' }}>🇦🇺 +61 (AU)</option>
+                    <option value="DE" {{ old('country_code') === 'DE' ? 'selected' : '' }}>🇩🇪 +49 (DE)</option>
+                    <option value="FR" {{ old('country_code') === 'FR' ? 'selected' : '' }}>🇫🇷 +33 (FR)</option>
+                    <option value="JP" {{ old('country_code') === 'JP' ? 'selected' : '' }}>🇯🇵 +81 (JP)</option>
+                    <option value="SG" {{ old('country_code') === 'SG' ? 'selected' : '' }}>🇸🇬 +65 (SG)</option>
+                </select>
+
+                <input
+                    type="text"
+                    name="phone"
+                    value="{{ old('phone') }}"
+                    placeholder="9876543210"
+                    class="@error('phone') error-border @enderror"
+                    style="flex: 1; margin-bottom: 0;">
+            </div>
 
             <div class="help">
-                Enter a valid Indian mobile number.
+                Select your country and enter a valid phone number.
             </div>
 
             @error('phone')
